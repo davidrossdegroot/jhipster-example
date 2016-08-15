@@ -1,0 +1,17 @@
+version: '2'
+services:
+    water-mongodb:
+        container_name: water-mongodb
+        image: mongo:3.3.9
+        ports:
+            - "27017:27017"
+        command: mongos --configdb water-mongodb-config
+    water-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    water-mongodb-config:
+        image: mongo:mongo:3.3.9
+        container_name: water-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
